@@ -19,20 +19,68 @@
     </style>
   </head>
   <body>
-    <h2>Chat Messages</h2>
-    
-   
+    <h2 id="text">Chat Messages</h2>
+
+    <h1 id="text2"></h1>
+    <h1 id="text3">player</h1>
     <form id="formsend">
-      <button type="submit">
-        
-        </button>
+      <button type="submit">turn</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      const socket = io();
+      const form = document.getElementById("formsend");
+      const text = document.getElementById("text");
+      const text2 = document.getElementById("text2");
+      const text3 = document.getElementById("text3");
+      const move = ["w", "b", "s"];
+      socket.on("playerRole", (role) => {
+        if (role === move[0]) {
+          text.innerText = "white player";
+        } else if (role === move[1]) {
+          text.innerHTML = "black player";
+        } else {
+          text.innerHTML = "spacktator";
+        }
+      });
 
-      const socket=io();
      
-     
+
+      let current_player = "w";
+      form.addEventListener("click", (e) => {
+        e.preventDefault();
+        socket.emit("turn", socket.id);
+      });
+
+      socket.on("moveon", (player) => {
+        text3.innerHTML = `now move start is ${player} player`;
+      });
+
+      socket.on("timer", (name) => {
+        if (current_player === "w") {
+          let timerleft = 15;
+
+          let timer = setInterval(function () {
+            if (timerleft <= 0) {
+              current_player = "b";
+              clearInterval(timer);
+            }
+            document.getElementById("text2").innerHTML = 15 - timerleft;
+            timerleft -= 1;
+          }, 1000);
+        } else {
+          let timerleft = 15;
+
+          let timer = setInterval(function () {
+            if (timerleft <= 0) {
+              current_player = "w";
+              clearInterval(timer);
+            }
+            document.getElementById("text2").innerHTML = 15 - timerleft;
+            timerleft -= 1;
+          }, 1000);
+        }
+      });
     </script>
   </body>
 </html>
