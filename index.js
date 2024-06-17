@@ -35,12 +35,12 @@ io.on("connection", (socket) => {
   });
   console.log(player);
   socket.on("turn", (id) => {
-    if (id === player.white) {
+    if (socket.id === player.white) {
+      socket.emit("timer", "w");
       io.emit("moveon", "white");
-      io.emit("timer", "w");
-    } else if (id === player.black) {
+    } else if (socket.id === player.black) {
+      socket.emit("timer", "b");
       socket.broadcast.emit("moveon", "black");
-      io.emit("timer", "b");
     }
   });
 });

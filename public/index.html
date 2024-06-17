@@ -49,7 +49,7 @@
       let current_player = "w";
       form.addEventListener("click", (e) => {
         e.preventDefault();
-        socket.emit("turn", socket.id);
+        socket.emit("turn",current_player);
       });
 
       socket.on("moveon", (player) => {
